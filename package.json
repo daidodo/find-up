@@ -1,0 +1,98 @@
+{
+  "name": "PROJECT_NAME",
+  "version": "0.0.1",
+  "description": "PROJECT DESCRIPTION.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "private": false,
+  "scripts": {
+    "compile": "tsc",
+    "compile:watch": "tsc -w",
+    "test": "jest src/",
+    "test:watch": "jest --watch src/",
+    "clean": "rm -rf dist",
+    "cleanall": "rm -rf dist node_modules *.tgz docs",
+    "docs": "rm -rf docs && typedoc",
+    "prepublishOnly": "npm run clean && npm i && tsc && jest src/ && eslint src/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daidodo/PROJECT_URL.git"
+  },
+  "keywords": [
+    "PROJECT KEYWORD"
+  ],
+  "author": "Zhao DAI <daidodo@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/daidodo/prereq/issues"
+  },
+  "homepage": "https://github.com/daidodo/prereq#readme",
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 100,
+    "arrowParens": "avoid",
+    "embeddedLanguageFormatting": "off"
+  },
+  "eslintConfig": {
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint",
+      "jest",
+      "eslint-plugin-tsdoc"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "prettier",
+      "plugin:jest/recommended",
+      "plugin:jest/style"
+    ],
+    "rules": {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+      "@typescript-eslint/restrict-template-expressions": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-use-before-define": [
+        "error",
+        {
+          "functions": false,
+          "classes": false
+        }
+      ],
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          "varsIgnorePattern": "^_",
+          "argsIgnorePattern": "^_",
+          "ignoreRestSiblings": true
+        }
+      ],
+      "tsdoc/syntax": "warn"
+    }
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.1",
+    "@types/jest": "^27.4.1",
+    "@typescript-eslint/eslint-plugin": "^5.13.0",
+    "@typescript-eslint/parser": "^5.13.0",
+    "eslint": "^8.10.0",
+    "eslint-config-prettier": "^8.4.0",
+    "eslint-plugin-jest": "^26.1.1",
+    "eslint-plugin-tsdoc": "^0.2.14",
+    "jest": "^27.5.1",
+    "prettier": "^2.5.1",
+    "ts-jest": "^27.1.3",
+    "typedoc": "^0.22.12",
+    "typedoc-plugin-markdown": "^3.11.14",
+    "typescript": "^4.6.2"
+  }
+}
