@@ -8,6 +8,7 @@
   "scripts": {
     "compile": "tsc",
     "compile:watch": "tsc -w",
+    "build": "npm run compile",
     "test": "jest src/",
     "test:watch": "jest --watch src/",
     "clean": "rm -rf dist",
