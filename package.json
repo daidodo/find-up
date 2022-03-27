@@ -91,6 +91,15 @@
           "ignoreRestSiblings": true
         }
       ],
+      "jest/expect-expect": [
+        "warn",
+        {
+          "assertFunctionNames": [
+            "expect",
+            "check"
+          ]
+        }
+      ],
       "tsdoc/syntax": "warn"
     }
   },

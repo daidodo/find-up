@@ -38,23 +38,25 @@ export default async function findUp(
   name: string | readonly string[] | Matcher,
   options: Options = {},
 ) {
-  const { directory, stopAt, limit } = normalise(options);
+  const { directory, stopAt, root, limit } = normalise(options);
   const runMatcher = getRunMatcher(name);
   const matches = [];
-  for (let cwd = directory; cwd !== stopAt && matches.length < limit; cwd = path.dirname(cwd)) {
+  for (let cwd = directory; matches.length < limit; cwd = path.dirname(cwd)) {
     const foundPath = await runMatcher({ ...options, cwd });
     if (foundPath) matches.push(path.resolve(cwd, foundPath));
+    if (cwd === stopAt || cwd === root) break;
   }
   return matches;
 }
 
 findUp.sync = (name: string | readonly string[] | Matcher, options: Options = {}) => {
-  const { directory, stopAt, limit } = normalise(options);
+  const { directory, stopAt, root, limit } = normalise(options);
   const runMatcher = getRunMatcher.sync(name);
   const matches = [];
-  for (let cwd = directory; cwd !== stopAt && matches.length < limit; cwd = path.dirname(cwd)) {
+  for (let cwd = directory; matches.length < limit; cwd = path.dirname(cwd)) {
     const foundPath = runMatcher({ ...options, cwd });
     if (foundPath) matches.push(path.resolve(cwd, foundPath));
+    if (cwd === stopAt || cwd === root) break;
   }
   return matches;
 };
@@ -83,8 +85,8 @@ function normalise(options: Options) {
   const directory = path.resolve(toPath(options.cwd) ?? '');
   const { root } = path.parse(directory);
   const stopAt = path.resolve(directory, toPath(options.stopAtPath) ?? root);
-  const limit = options.stopAtLimit || Number.POSITIVE_INFINITY;
-  return { directory, stopAt, limit };
+  const limit = options.stopAtLimit ?? Number.POSITIVE_INFINITY;
+  return { directory, stopAt, root, limit };
 }
 
 function getRunMatcher(name: string | readonly string[] | Matcher) {

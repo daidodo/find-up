@@ -9,7 +9,7 @@
     "outDir": "dist"
   },
   "include": ["src/"],
-  "exclude": ["src/**/*.test.ts"],
+  "exclude": ["src/test", "src/**/*.test.ts"],
   "typedocOptions": {
     "entryPoints": ["src/index.ts"],
     "hideInPageTOC": true,
