@@ -1,9 +1,9 @@
 import fs, {
   promises,
   Stats,
-} from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+} from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { assertIsString } from '@dozerg/condition';
 

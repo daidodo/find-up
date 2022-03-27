@@ -1,4 +1,4 @@
-import path from 'node:path';
+import path from 'path';
 
 export function getCheck(dir: string) {
   return (actual: string[], expected: string[]) => {
