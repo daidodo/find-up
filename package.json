@@ -1,7 +1,7 @@
 {
-  "name": "PROJECT_NAME",
+  "name": "@dozerg/find-up",
   "version": "0.0.1",
-  "description": "PROJECT DESCRIPTION.",
+  "description": "Find files or directories by walking up parent directories.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "private": false,
@@ -17,10 +17,26 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/daidodo/PROJECT_URL.git"
+    "url": "git+https://github.com/daidodo/find-up.git"
   },
   "keywords": [
-    "PROJECT KEYWORD"
+    "find",
+    "up",
+    "find-up",
+    "findup",
+    "look-up",
+    "look",
+    "file",
+    "search",
+    "match",
+    "package",
+    "resolve",
+    "parent",
+    "folder",
+    "directory",
+    "walk",
+    "walking",
+    "path"
   ],
   "author": "Zhao DAI <daidodo@gmail.com>",
   "license": "MIT",
@@ -29,8 +45,7 @@
   },
   "homepage": "https://github.com/daidodo/prereq#readme",
   "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node"
+    "preset": "ts-jest"
   },
   "prettier": {
     "singleQuote": true,
@@ -94,5 +109,8 @@
     "typedoc": "^0.22.12",
     "typedoc-plugin-markdown": "^3.11.14",
     "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "@dozerg/condition": "^1.0.1"
   }
 }
