@@ -1,5 +1,5 @@
 import fs, {
-  promises as fsPromises,
+  promises,
   Stats,
 } from 'node:fs';
 import path from 'node:path';
@@ -31,7 +31,7 @@ export interface Options {
   /**
    * Stop the search once a number of results have been found. Default to `Number.POSITIVE_INFINITY`.
    */
-  stopInLimit?: number;
+  stopAtLimit?: number;
 }
 
 export default async function findUp(
@@ -83,7 +83,7 @@ function normalise(options: Options) {
   const directory = path.resolve(toPath(options.cwd) ?? '');
   const { root } = path.parse(directory);
   const stopAt = path.resolve(directory, toPath(options.stopAtPath) ?? root);
-  const limit = options.stopInLimit || Number.POSITIVE_INFINITY;
+  const limit = options.stopAtLimit || Number.POSITIVE_INFINITY;
   return { directory, stopAt, limit };
 }
 
@@ -130,7 +130,7 @@ locatePath.sync = (names: string[], { cwd, allowSymlinks, type }: Options) => {
 };
 
 function getFstat(allowSymlinks: boolean) {
-  const fstat = allowSymlinks ? fsPromises.stat : fsPromises.lstat;
+  const fstat = allowSymlinks ? promises.stat : promises.lstat;
   return async (fname: string) => {
     try {
       return fstat(fname);
