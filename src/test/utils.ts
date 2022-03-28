@@ -6,7 +6,7 @@ export function getCheck(dir: string) {
     actual.forEach((a, i) => {
       const e = expected[i];
       const p = path.join('src', 'test', ...dir.split('/'), ...e.split('/'));
-      expect(a).toMatch(new RegExp(`${p.replace('\\', '\\\\')}$`));
+      expect(a).toMatch(new RegExp(`${p.replace(/\\/g, '\\\\')}$`));
     });
   };
 }
