@@ -4,7 +4,7 @@ import findUp from '../../../';
 import { getCheck } from '../../utils';
 
 describe('type', () => {
-  const check = getCheck('options/type');
+  const check = getCheck(__dirname);
   beforeAll(() => {
     process.chdir(path.join(__dirname, 'abc'));
   });

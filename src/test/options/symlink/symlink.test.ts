@@ -4,7 +4,7 @@ import findUp from '../../..';
 import { getCheck } from '../../utils';
 
 describe('allowSymlinks', () => {
-  const check = getCheck('options/symlink');
+  const check = getCheck(__dirname);
   beforeAll(() => {
     process.chdir(path.join(__dirname, 'aaa'));
   });
