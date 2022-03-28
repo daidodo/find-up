@@ -10,9 +10,6 @@ import {
   isNonNull,
 } from '@dozerg/condition';
 
-type Matcher = (directory: string) => string | Promise<string> | undefined;
-// type Callback = (pathname: string) => void;
-
 export interface Options {
   /**
    * The directory to start from. Default to `process.cwd()`;
@@ -37,13 +34,15 @@ export interface Options {
   stopAtLimit?: number;
 }
 
+type Matcher = (directory: string) => string | Promise<string> | undefined;
+
 export default async function findUp(
   name: string | readonly string[] | Matcher,
   options: Options = {},
 ) {
   const { directory, stopAt, root, limit } = normalise(options);
   const { found, runMatcher } = await getRunMatcher(name, { ...options, cwd: directory });
-  const unique = new Set<string>();
+  const unique = new Set<string>(found);
   for (let cwd = directory; found.length < limit; cwd = path.dirname(cwd)) {
     const { result, stop } = await runMatcher({ ...options, cwd });
     if (result && !unique.has(result)) {
@@ -58,7 +57,7 @@ export default async function findUp(
 findUp.sync = (name: string | readonly string[] | Matcher, options: Options = {}) => {
   const { directory, stopAt, root, limit } = normalise(options);
   const { found, runMatcher } = getRunMatcher.sync(name, { ...options, cwd: directory });
-  const unique = new Set<string>();
+  const unique = new Set<string>(found);
   for (let cwd = directory; found.length < limit; cwd = path.dirname(cwd)) {
     const { result, stop } = runMatcher({ ...options, cwd });
     if (result && !unique.has(result)) {
@@ -70,21 +69,21 @@ findUp.sync = (name: string | readonly string[] | Matcher, options: Options = {}
   return found.slice(0, limit);
 };
 
-// findUp.callback = (
-//   name: string | readonly string[] | Matcher,
-//   callback: Callback,
-//   option?: Options,
-// ) => {
-//   // TODO
-//   return;
-// };
-
-// findUp.generate = async function* (name: string | string[] | Matcher, options: Options = {}) {
-//   // TODO
-//   for (const n of []) {
-//     yield '';
-//   }
-// };
+findUp.gen = async function* (name: string | readonly string[] | Matcher, options: Options = {}) {
+  const { directory, stopAt, root, limit } = normalise(options);
+  const { found, runMatcher } = await getRunMatcher(name, { ...options, cwd: directory });
+  yield* found.slice(0, limit);
+  const unique = new Set<string>(found);
+  for (let cwd = directory; found.length < limit; cwd = path.dirname(cwd)) {
+    const { result, stop } = await runMatcher({ ...options, cwd });
+    if (result && !unique.has(result)) {
+      found.push(result);
+      unique.add(result);
+      yield result;
+    }
+    if (stop || cwd === stopAt || cwd === root) break;
+  }
+};
 
 function toPath(urlOrPath: URL | string | undefined) {
   return urlOrPath instanceof URL ? fileURLToPath(urlOrPath) : urlOrPath;

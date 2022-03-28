@@ -13,8 +13,16 @@ export function getCheck(dir: string) {
       }
     });
   };
-  return (actual: string[] | Promise<string[]>, expected: string[]) => {
-    if (Array.isArray(actual)) return check(actual, expected);
-    actual.then(results => check(results, expected));
+  return async (
+    actual: string[] | Promise<string[]> | AsyncGenerator<string, void>,
+    expected: string[],
+  ) => {
+    if (Array.isArray(actual)) check(actual, expected);
+    else if (actual instanceof Promise) actual.then(results => check(results, expected));
+    else {
+      const results = [];
+      for await (const n of actual) results.push(n);
+      check(results, expected);
+    }
   };
 }

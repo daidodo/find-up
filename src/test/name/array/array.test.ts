@@ -26,6 +26,7 @@ describe('name:array', () => {
       check(findUp.sync(['abc', name]), [name, 'aaa/bbb/abc', 'abc']);
       check(findUp.sync(['abc', name, name]), [name, 'aaa/bbb/abc', 'abc']);
       check(findUp.sync([name, 'abc']), [name, 'aaa/bbb/abc', 'abc']);
+      check(findUp.sync([name, 'def']), [name, 'def']);
     });
     describe('not found', () => {
       const name = path.join(__dirname, 'aaa', 'zzz');
@@ -43,6 +44,12 @@ describe('name:array', () => {
       check(findUp.sync([name1, name2]), [name1, name2]);
       check(findUp.sync([name1, name2, name1]), [name1, name2]);
       check(findUp.sync([name1, name2, name1, name2]), [name1, name2]);
+    });
+    describe('limit', () => {
+      it('should return matched files', () => {
+        check(findUp.sync([name1, name2], { stopAtLimit: 1 }), [name1]);
+        check(findUp.sync([name2, name1], { stopAtLimit: 1 }), [name2]);
+      });
     });
     describe('some not found', () => {
       const name1 = path.join(__dirname, 'aaa', 'zzz');
