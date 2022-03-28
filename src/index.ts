@@ -5,7 +5,10 @@ import fs, {
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { assertIsString } from '@dozerg/condition';
+import {
+  assertIsString,
+  isNonNull,
+} from '@dozerg/condition';
 
 type Matcher = (directory: string) => string | Promise<string> | undefined;
 // type Callback = (pathname: string) => void;
@@ -39,26 +42,32 @@ export default async function findUp(
   options: Options = {},
 ) {
   const { directory, stopAt, root, limit } = normalise(options);
-  const runMatcher = getRunMatcher(name);
-  const matches = [];
-  for (let cwd = directory; matches.length < limit; cwd = path.dirname(cwd)) {
-    const foundPath = await runMatcher({ ...options, cwd });
-    if (foundPath) matches.push(path.resolve(cwd, foundPath));
-    if (cwd === stopAt || cwd === root) break;
+  const { found, runMatcher } = await getRunMatcher(name, { ...options, cwd: directory });
+  const unique = new Set<string>();
+  for (let cwd = directory; found.length < limit; cwd = path.dirname(cwd)) {
+    const { result, stop } = await runMatcher({ ...options, cwd });
+    if (result && !unique.has(result)) {
+      found.push(result);
+      unique.add(result);
+    }
+    if (stop || cwd === stopAt || cwd === root) break;
   }
-  return matches;
+  return found.slice(0, limit);
 }
 
 findUp.sync = (name: string | readonly string[] | Matcher, options: Options = {}) => {
   const { directory, stopAt, root, limit } = normalise(options);
-  const runMatcher = getRunMatcher.sync(name);
-  const matches = [];
-  for (let cwd = directory; matches.length < limit; cwd = path.dirname(cwd)) {
-    const foundPath = runMatcher({ ...options, cwd });
-    if (foundPath) matches.push(path.resolve(cwd, foundPath));
-    if (cwd === stopAt || cwd === root) break;
+  const { found, runMatcher } = getRunMatcher.sync(name, { ...options, cwd: directory });
+  const unique = new Set<string>();
+  for (let cwd = directory; found.length < limit; cwd = path.dirname(cwd)) {
+    const { result, stop } = runMatcher({ ...options, cwd });
+    if (result && !unique.has(result)) {
+      found.push(result);
+      unique.add(result);
+    }
+    if (stop || cwd === stopAt || cwd === root) break;
   }
-  return matches;
+  return found.slice(0, limit);
 };
 
 // findUp.callback = (
@@ -89,25 +98,53 @@ function normalise(options: Options) {
   return { directory, stopAt, root, limit };
 }
 
-function getRunMatcher(name: string | readonly string[] | Matcher) {
-  return async (options: Options) => {
-    if (typeof name !== 'function') return locatePath([name].flat(), options);
-    assertIsString(options.cwd);
-    const foundPath = await name(options.cwd);
-    if (typeof foundPath === 'string') return locatePath([foundPath], options);
-    return undefined;
+async function getRunMatcher(name: string | readonly string[] | Matcher, options: Options) {
+  const { absolute, relative, matcher } = normaliseName(name);
+  const found = [];
+  if (absolute)
+    for (const n of absolute) {
+      const p = await locatePath([n], options);
+      if (p) found.push(p);
+    }
+  const runMatcher = (opt: Options) => {
+    if (matcher) {
+      assertIsString(opt.cwd);
+      const p = matcher(opt.cwd);
+      return typeof p === 'string' ? { result: locatePath.sync([p], opt) } : {};
+    }
+    return { result: locatePath.sync(relative, opt), stop: relative.length < 1 };
   };
+  return { found, runMatcher };
 }
 
-getRunMatcher.sync = (name: string | readonly string[] | Matcher) => {
-  return (options: Options) => {
-    if (typeof name !== 'function') return locatePath.sync([name].flat(), options);
-    assertIsString(options.cwd);
-    const foundPath = name(options.cwd);
-    if (typeof foundPath === 'string') return locatePath.sync([foundPath], options);
-    return undefined;
+getRunMatcher.sync = (name: string | readonly string[] | Matcher, options: Options) => {
+  const { absolute, relative, matcher } = normaliseName(name);
+  const found = absolute?.map(n => locatePath.sync([n], options)).filter(isNonNull) ?? [];
+  const runMatcher = (opt: Options) => {
+    if (matcher) {
+      assertIsString(opt.cwd);
+      const p = matcher(opt.cwd);
+      return typeof p === 'string' ? { result: locatePath.sync([p], opt) } : {};
+    }
+    return { result: locatePath.sync(relative, opt), stop: relative.length < 1 };
   };
+  return { found, runMatcher };
 };
+
+function normaliseName(name: string | readonly string[] | Matcher) {
+  if (typeof name !== 'function') {
+    const [absolute, relative] = [name].flat().reduce<Set<string>[]>(
+      (r, n) => {
+        if (path.isAbsolute(n)) r[0].add(path.normalize(n));
+        else r[1].add(n);
+        return r;
+      },
+      [new Set(), new Set()],
+    );
+    return { absolute: [...absolute], relative: [...relative] };
+  }
+  return { matcher: name };
+}
 
 async function locatePath(names: string[], { cwd, allowSymlinks, type }: Options) {
   assertIsString(cwd);

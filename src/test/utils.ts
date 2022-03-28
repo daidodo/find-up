@@ -6,8 +6,11 @@ export function getCheck(dir: string) {
     expect(actual).toHaveLength(expected.length);
     actual.forEach((a, i) => {
       const e = expected[i];
-      const p = path.join('src', 'test', ...r.split(sep), ...e.split('/'));
-      expect(a).toMatch(new RegExp(`${p.replace(/\\/g, '\\\\')}$`));
+      if (path.isAbsolute(e)) expect(a).toBe(e);
+      else {
+        const p = path.join('src', 'test', ...r.split(sep), ...e.split('/'));
+        expect(a).toMatch(new RegExp(`${p.replace(/\\/g, '\\\\')}$`));
+      }
     });
   };
 }

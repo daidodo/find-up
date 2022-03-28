@@ -3,7 +3,7 @@ import path from 'path';
 import findUp from '../../../';
 import { getCheck } from '../../utils';
 
-describe('cwd', () => {
+describe('options.cwd', () => {
   const check = getCheck(__dirname);
   beforeAll(() => {
     process.chdir(__dirname);
