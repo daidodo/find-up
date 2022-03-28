@@ -1,10 +1,10 @@
 import path from 'path';
 
-import findUp from '../../';
-import { getCheck } from '../utils';
+import findUp from '../../..';
+import { getCheck } from '../../utils';
 
 describe('cwd', () => {
-  const check = getCheck('cwd');
+  const check = getCheck('options/cwd');
   beforeAll(() => {
     process.chdir(__dirname);
   });

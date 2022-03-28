@@ -1,10 +1,10 @@
 import path from 'path';
 
-import findUp from '../../';
-import { getCheck } from '../utils';
+import findUp from '../../../';
+import { getCheck } from '../../utils';
 
 describe('type', () => {
-  const check = getCheck('type');
+  const check = getCheck('options/type');
   beforeAll(() => {
     process.chdir(path.join(__dirname, 'abc'));
   });

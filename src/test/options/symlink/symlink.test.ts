@@ -1,10 +1,10 @@
 import path from 'path';
 
-import findUp from '../../';
-import { getCheck } from '../utils';
+import findUp from '../../..';
+import { getCheck } from '../../utils';
 
 describe('allowSymlinks', () => {
-  const check = getCheck('symlink');
+  const check = getCheck('options/symlink');
   beforeAll(() => {
     process.chdir(path.join(__dirname, 'aaa'));
   });

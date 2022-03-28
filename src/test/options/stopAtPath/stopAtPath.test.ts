@@ -1,10 +1,10 @@
 import path from 'path';
 
-import findUp from '../../';
-import { getCheck } from '../utils';
+import findUp from '../../..';
+import { getCheck } from '../../utils';
 
 describe('stopAtPath', () => {
-  const check = getCheck('stopAtPath');
+  const check = getCheck('options/stopAtPath');
   beforeAll(() => {
     process.chdir(path.join(__dirname, 'aaa', 'bbb'));
   });
