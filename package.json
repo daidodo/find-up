@@ -1,6 +1,6 @@
 {
   "name": "@dozerg/find-up",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Find files or directories by walking up parent directories.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
