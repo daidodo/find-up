@@ -20,12 +20,8 @@ export function getCheck(dir: string) {
       }
     });
   };
-  const check = async (
-    actual: string[] | Promise<string[]> | AsyncGenerator<string, void>,
-    expected: string[],
-  ) => {
+  const check = async (actual: string[] | AsyncGenerator<string, void>, expected: string[]) => {
     if (Array.isArray(actual)) checkString(actual, expected);
-    else if (actual instanceof Promise) actual.then(results => checkString(results, expected));
     else {
       const results = [];
       for await (const n of actual) results.push(n);
@@ -34,18 +30,18 @@ export function getCheck(dir: string) {
   };
   return (params: Params, expected: string[], msg: string) => {
     describe('findUp', () => {
-      it(msg, () => {
-        check(findUp(...params), expected);
+      it(msg, async () => {
+        await check(await findUp(...params), expected);
       });
     });
     describe('findUp.sync', () => {
-      it(msg, () => {
-        check(findUp.sync(...params), expected);
+      it(msg, async () => {
+        await check(findUp.sync(...params), expected);
       });
     });
     describe('findUp.gen', () => {
-      it(msg, () => {
-        check(findUp.gen(...params), expected);
+      it(msg, async () => {
+        await check(findUp.gen(...params), expected);
       });
     });
   };
