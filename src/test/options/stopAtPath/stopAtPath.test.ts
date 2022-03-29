@@ -1,6 +1,5 @@
 import path from 'path';
 
-import findUp from '../../..';
 import { getCheck } from '../../utils';
 
 describe('options.stopAtPath', () => {
@@ -9,44 +8,30 @@ describe('options.stopAtPath', () => {
     process.chdir(path.join(__dirname, 'aaa', 'bbb'));
   });
   describe('default', () => {
-    it('should not stop', () => {
-      check(findUp.sync('abc'), ['aaa/bbb/abc', 'aaa/abc', 'abc']);
-    });
+    check(['abc'], ['aaa/bbb/abc', 'aaa/abc', 'abc'], 'should not stop');
   });
   describe('absolute path', () => {
     describe('current', () => {
       const stopAtPath = path.join(__dirname, 'aaa', 'bbb');
-      it('should stop as expected', () => {
-        check(findUp.sync('abc', { stopAtPath }), ['aaa/bbb/abc']);
-      });
+      check(['abc', { stopAtPath }], ['aaa/bbb/abc'], 'should stop as expected');
     });
     describe('up level', () => {
       const stopAtPath = path.join(__dirname, 'aaa');
-      it('should stop as expected', () => {
-        check(findUp.sync('abc', { stopAtPath }), ['aaa/bbb/abc', 'aaa/abc']);
-      });
+      check(['abc', { stopAtPath }], ['aaa/bbb/abc', 'aaa/abc'], 'should stop as expected');
     });
     describe('not found', () => {
-      it('should not stop', () => {
-        check(findUp.sync('abc', { stopAtPath: '/zzz' }), ['aaa/bbb/abc', 'aaa/abc', 'abc']);
-      });
+      check(['abc', { stopAtPath: '/zzz' }], ['aaa/bbb/abc', 'aaa/abc', 'abc'], 'should not stop');
     });
   });
   describe('relative path', () => {
     describe('current', () => {
-      it('should stop as expected', () => {
-        check(findUp.sync('abc', { stopAtPath: '.' }), ['aaa/bbb/abc']);
-      });
+      check(['abc', { stopAtPath: '.' }], ['aaa/bbb/abc'], 'should stop as expected');
     });
     describe('up level', () => {
-      it('should stop as expected', () => {
-        check(findUp.sync('abc', { stopAtPath: '..' }), ['aaa/bbb/abc', 'aaa/abc']);
-      });
+      check(['abc', { stopAtPath: '..' }], ['aaa/bbb/abc', 'aaa/abc'], 'should stop as expected');
     });
     describe('not found', () => {
-      it('should not stop', () => {
-        check(findUp.sync('abc', { stopAtPath: 'zzz' }), ['aaa/bbb/abc', 'aaa/abc', 'abc']);
-      });
+      check(['abc', { stopAtPath: 'zzz' }], ['aaa/bbb/abc', 'aaa/abc', 'abc'], 'should not stop');
     });
   });
 });

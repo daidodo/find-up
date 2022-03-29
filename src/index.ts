@@ -105,13 +105,13 @@ async function getRunMatcher(name: string | readonly string[] | Matcher, options
       const p = await locatePath([n], options);
       if (p) found.push(p);
     }
-  const runMatcher = (opt: Options) => {
+  const runMatcher = async (opt: Options) => {
     if (matcher) {
       assertIsString(opt.cwd);
       const p = matcher(opt.cwd);
-      return typeof p === 'string' ? { result: locatePath.sync([p], opt) } : {};
+      return typeof p === 'string' ? { result: await locatePath([p], opt) } : {};
     }
-    return { result: locatePath.sync(relative, opt), stop: relative.length < 1 };
+    return { result: await locatePath(relative, opt), stop: relative.length < 1 };
   };
   return { found, runMatcher };
 }
@@ -171,7 +171,7 @@ function getFstat(allowSymlinks: boolean) {
   const fstat = allowSymlinks ? promises.stat : promises.lstat;
   return async (fname: string) => {
     try {
-      return fstat(fname);
+      return await fstat(fname); // Need to await if there is an error
     } catch {
       return undefined;
     }

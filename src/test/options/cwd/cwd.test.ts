@@ -1,6 +1,5 @@
 import path from 'path';
 
-import findUp from '../../../';
 import { getCheck } from '../../utils';
 
 describe('options.cwd', () => {
@@ -9,20 +8,14 @@ describe('options.cwd', () => {
     process.chdir(__dirname);
   });
   describe('default', () => {
-    it('should start from CWD', () => {
-      check(findUp.sync('abc'), ['abc']);
-    });
+    check(['abc'], ['abc'], 'should start from CWD');
   });
   describe('absolute path', () => {
     const cwd = path.join(__dirname, 'aaa');
-    it('should start from expected', () => {
-      check(findUp.sync('abc', { cwd }), ['aaa/abc', 'abc']);
-    });
+    check(['abc', { cwd }], ['aaa/abc', 'abc'], 'should start from expected');
   });
   describe('relative path', () => {
     const cwd = 'aaa';
-    it('should start from expected', () => {
-      check(findUp.sync('abc', { cwd }), ['aaa/abc', 'abc']);
-    });
+    check(['abc', { cwd }], ['aaa/abc', 'abc'], 'should start from expected');
   });
 });

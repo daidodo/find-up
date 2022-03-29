@@ -1,6 +1,5 @@
 import path from 'path';
 
-import findUp from '../../../';
 import { getCheck } from '../../utils';
 
 describe('options.type', () => {
@@ -9,18 +8,12 @@ describe('options.type', () => {
     process.chdir(path.join(__dirname, 'abc'));
   });
   describe('default', () => {
-    it('should match file', () => {
-      check(findUp.sync('abc'), ['abc/abc']);
-    });
+    check(['abc'], ['abc/abc'], 'should match file');
   });
   describe('file', () => {
-    it('should match file', () => {
-      check(findUp.sync('abc', { type: 'file' }), ['abc/abc']);
-    });
+    check(['abc', { type: 'file' }], ['abc/abc'], 'should match file');
   });
   describe('directory', () => {
-    it('should start from expected', () => {
-      check(findUp.sync('abc', { type: 'directory' }), ['abc']);
-    });
+    check(['abc', { type: 'directory' }], ['abc'], 'should match file');
   });
 });

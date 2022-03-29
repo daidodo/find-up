@@ -1,6 +1,5 @@
 import path from 'path';
 
-import findUp from '../../../';
 import { getCheck } from '../../utils';
 
 describe('options.stopAtLimit', () => {
@@ -9,66 +8,48 @@ describe('options.stopAtLimit', () => {
     process.chdir(path.join(__dirname, 'aaa', 'bbb'));
   });
   describe('default', () => {
-    it('should not stop', () => {
-      check(findUp.sync('abc'), ['aaa/bbb/abc', 'aaa/abc', 'abc']);
-    });
+    check(['abc'], ['aaa/bbb/abc', 'aaa/abc', 'abc'], 'should not stop');
   });
   describe('negative', () => {
-    it('should return 0 results', () => {
-      check(findUp.sync('abc', { stopAtLimit: -1 }), []);
-    });
+    check(['abc', { stopAtLimit: -1 }], [], 'should return 0 results');
   });
   describe('0', () => {
-    it('should return 0 results', () => {
-      check(findUp.sync('abc', { stopAtLimit: 0 }), []);
-    });
+    check(['abc', { stopAtLimit: 0 }], [], 'should return 0 results');
   });
   describe('1', () => {
-    it('should 1 result', () => {
-      check(findUp.sync('abc', { stopAtLimit: 1 }), ['aaa/bbb/abc']);
-    });
+    check(['abc', { stopAtLimit: 1 }], ['aaa/bbb/abc'], 'should 1 result');
     describe('with hole', () => {
-      it('should 1 result', () => {
-        check(findUp.sync('abc', { cwd: 'ccc', stopAtLimit: 1 }), ['aaa/bbb/abc']);
-      });
+      check(['abc', { cwd: 'ccc', stopAtLimit: 1 }], ['aaa/bbb/abc'], 'should 1 result');
     });
   });
   describe('2', () => {
-    it('should 2 results', () => {
-      check(findUp.sync('abc', { stopAtLimit: 2 }), ['aaa/bbb/abc', 'aaa/abc']);
-    });
+    check(['abc', { stopAtLimit: 2 }], ['aaa/bbb/abc', 'aaa/abc'], 'should 2 results');
     describe('with hole', () => {
-      it('should 2 results', () => {
-        check(findUp.sync('abc', { cwd: 'ccc', stopAtLimit: 2 }), ['aaa/bbb/abc', 'aaa/abc']);
-      });
+      check(
+        ['abc', { cwd: 'ccc', stopAtLimit: 2 }],
+        ['aaa/bbb/abc', 'aaa/abc'],
+        'should 2 results',
+      );
     });
   });
   describe('3', () => {
-    it('should 3 results', () => {
-      check(findUp.sync('abc', { stopAtLimit: 3 }), ['aaa/bbb/abc', 'aaa/abc', 'abc']);
-    });
+    check(['abc', { stopAtLimit: 3 }], ['aaa/bbb/abc', 'aaa/abc', 'abc'], 'should 3 results');
     describe('with hole', () => {
-      it('should 3 results', () => {
-        check(findUp.sync('abc', { cwd: 'ccc', stopAtLimit: 3 }), [
-          'aaa/bbb/abc',
-          'aaa/abc',
-          'abc',
-        ]);
-      });
+      check(
+        ['abc', { cwd: 'ccc', stopAtLimit: 3 }],
+        ['aaa/bbb/abc', 'aaa/abc', 'abc'],
+        'should 3 results',
+      );
     });
   });
   describe('4', () => {
-    it('should 3 results', () => {
-      check(findUp.sync('abc', { stopAtLimit: 4 }), ['aaa/bbb/abc', 'aaa/abc', 'abc']);
-    });
+    check(['abc', { stopAtLimit: 4 }], ['aaa/bbb/abc', 'aaa/abc', 'abc'], 'should 3 results');
     describe('with hole', () => {
-      it('should 3 results', () => {
-        check(findUp.sync('abc', { cwd: 'ccc', stopAtLimit: 4 }), [
-          'aaa/bbb/abc',
-          'aaa/abc',
-          'abc',
-        ]);
-      });
+      check(
+        ['abc', { cwd: 'ccc', stopAtLimit: 4 }],
+        ['aaa/bbb/abc', 'aaa/abc', 'abc'],
+        'should 3 results',
+      );
     });
   });
 });
