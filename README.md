@@ -152,6 +152,10 @@ const configs = findUp.sync(matcher);
 | stopAtPath    | `string` \| `URL`         | `path.parse(cwd).root`     | The path to the directory to stop the search before reaching root. |
 | allowSymlinks | `boolean`                 | _true_                     | Allow symlinks to match if they point to the chosen path type.     |
 
+# Inspiration
+
+Many thanks to [find-up](https://github.com/sindresorhus/find-up) from which this project is inspired.
+
 # License
 
 MIT © Zhao DAI <daidodo@gmail.com>
