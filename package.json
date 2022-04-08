@@ -42,9 +42,9 @@
   "author": "Zhao DAI <daidodo@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/daidodo/prereq/issues"
+    "url": "https://github.com/daidodo/find-up/issues"
   },
-  "homepage": "https://github.com/daidodo/prereq#readme",
+  "homepage": "https://github.com/daidodo/find-up#readme",
   "jest": {
     "preset": "ts-jest"
   },
