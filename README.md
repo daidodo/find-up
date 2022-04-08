@@ -14,6 +14,7 @@ Find a file or directory by walking up parent directories.
   - [`findUp.gen`](#findupgen)
   - [`findUp.sync`](#findupsync)
 - [Options](#options)
+- [Inspiration](#inspiration)
 - [License](#license)
 
 # Install
