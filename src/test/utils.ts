@@ -1,6 +1,3 @@
-/* eslint-disable jest/valid-title */
-/* eslint-disable jest/no-export */
-
 import path, { sep } from 'path';
 
 import findUp from '../';
@@ -23,7 +20,7 @@ export function getCheck(dir: string) {
   const check = async (actual: string[] | AsyncGenerator<string, void>, expected: string[]) => {
     if (Array.isArray(actual)) checkString(actual, expected);
     else {
-      const results = [];
+      const results: string[] = [];
       for await (const n of actual) results.push(n);
       checkString(results, expected);
     }
